@@ -12,6 +12,16 @@ var app = (function(){
         requestDataForCountryList();
     }
 
+    let initAbout = function() {
+        let elem = document.createElement("img");
+        elem.setAttribute("src", "https://media1.tenor.com/images/4324d537dbc06f422b34ae131c7b3e14/tenor.gif?itemid=7755460");
+        elem.setAttribute("height", "768");
+        elem.setAttribute("width", "1024");
+        elem.setAttribute("alt", "Best man");
+        document.getElementById("image-placeholder").appendChild(elem);
+        
+    }
+
     let requestDataForCountry = function(country){
         console.log("Selected country: " + country);
         let urlCountry = url + '?country=' + country;
@@ -178,9 +188,10 @@ var app = (function(){
     return {
         requestDataForCountry: requestDataForCountry,
         addCountryToWatchlist: addCountryToWatchlist,
+        searchCountryList: searchCountryList,
         initDashboard: initDashboard,
         initSelectCountry: initSelectCountry,
-        searchCountryList: searchCountryList
+        initAbout: initAbout
     }
 }());
 

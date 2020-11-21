@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>WebEng-Einzelprojekt-Notify</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="assets/stylesheets/normalize.css">
+        <link rel="stylesheet" type="text/css" href="assets/stylesheets/styles.css">
+    </head>
+    <body  onload="app.initSelectCountry();">
+        <nav class="top-nav fixed">
+            <ul>
+                <li>
+                    <a href="index.html">Dashboard</a>
+                </li>
+                <li>
+                    <a class="active" href="selectCountry.html">Select Country</a>
+                </li>
+                <li>
+                    <a href="about.html">About</a>
+                </li>
+                <li class="right">
+                    <a href="login.html">Login</a>
+                </li>
+            </ul>
+        </nav>
+        <main>
+            <div class="grid-row">
+                <h1 class="center">Select Country</h1>
+            </div>
+            <div  class="grid-col-6">
+                <table id="country-list-all">
+                   <tr class="header">
+                        <th>Country</th>
+                        <th>Add country to watchlist</th>
+                    </tr>
+                    <!--
+                        Country-List from API
+                    -->
+                </table>
+            </div>
+            <div  class="grid-col-6">
+                <table id="country-list-selected">
+                   <tr class="header">
+                        <th>Country</th>
+                        <th>Remove country from watchlist</th>
+                    </tr>
+                    <!--
+                        Country-List from API
+                    -->
+                </table>
+            </div>
+        </main>
+        <script src="assets/javascript/main.js"></script>
+    </body>
+</html>

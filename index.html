@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>WebEng-Einzelprojekt-Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="assets/stylesheets/normalize.css">
+        <link rel="stylesheet" type="text/css" href="assets/stylesheets/styles.css">
+    </head>
+    <body onload="initDashboard()">
+        <nav class="top-nav grid-row">
+            <a class="nav-button active" href="index.html" title="Dashboard"> Dashboard </a>
+            <a class="nav-button" href="notify.html" title="Notify"> Notify </a>
+            <a class="nav-button" href="about.html" title="About"> About </a>
+        </nav>
+        <main>
+            <h1 class="grid-row center country">Global</h1>
+            
+            <div class="grid-col">
+                <button class="btn-primary" onclick="app.requestDataWithAjax();">Send Ajax Request</button>
+            </div>
+
+            <div class="grid-col-3">
+                <h2>Confirmed Cases</h2>
+            </div>
+            <div class="grid-col-3">
+                <h2>Active Cases</h2>
+            </div>
+            <div class="grid-col-3">
+                <h2>Recovered</h2>
+            </div>
+            <div class="grid-col-3">
+                <h2>Deaths</h2>
+            </div>
+            
+            <div class="grid-col-6">
+                <p>Linear Graph</p>
+            </div>
+            <div class="grid-col-6">
+                <p>Logarithmic Graph</p>
+            </div>
+
+            <div class="grid-row">
+                <p>Search Form</p>
+            </div>
+            <div class="grid-row">
+                <p>Country List</p>
+            </div>
+        </main>
+
+        <script src="assets/javascript/main.js"></script>
+    </body>
+</html>

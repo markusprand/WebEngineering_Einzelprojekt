@@ -8,7 +8,7 @@
         <link rel="stylesheet" type="text/css" href="assets/stylesheets/normalize.css">
         <link rel="stylesheet" type="text/css" href="assets/stylesheets/styles.css">
     </head>
-    <body>
+    <body class="myBody">
         <nav class="top-nav fixed">
             <ul>
                 <li>
@@ -27,9 +27,20 @@
         </nav>
         <main>
             <div class="grid-row">
-                
+                <div class="signin">
+                    <h3 class="sign">Register</h3>
+                    <form class="form1">
+                        <input id="mail" type="email" name="mail" placeholder="luke@skywalker.sw"> 
+                        <input id="age" type="number" min="12" max="120" step="1" id="n1" name="age"
+                        pattern="\d+" placeholder="Age">
+                        <input id="username" type="text" placeholder="Username">
+                        <input id="password" type="password" placeholder="Password">
+                        <a class="submit">Register</a>
+                    </form>
+                </div>
             </div>
         </main>
         <script src="assets/javascript/main.js"></script>
+        <script src="assets/javascript/login.js"></script>
     </body>
 </html>

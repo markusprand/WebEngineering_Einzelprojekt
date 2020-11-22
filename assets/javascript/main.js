@@ -184,6 +184,7 @@ var app = (function(){
         }
       }
 
+
     //public functions and variables
     return {
         requestDataForCountry: requestDataForCountry,

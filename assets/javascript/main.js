@@ -1,11 +1,14 @@
 var app = (function(){
     'use strict'; // execute javascript in strict mode. Eg: usage of undeclared variables is not allowed.
 
-    var url = 'https://covid-api.mmediagroup.fr/v1/cases';
+    const proxyurl ='' /*= "https://cors-anywhere.herokuapp.com/"*/;
+    var url = 'https://covid-api.mmediagroup.fr/v1/';
 
     let initDashboard = function() {
-        requestDataForCountry('Global');
-        requestDataForCountryList();
+        let country = 'Global';
+        requestDataForCountry(country);
+        //requestHistroyDataForCountry(country)
+        //requestDataForCountryList();
     }
 
     let initSelectCountry = function() {
@@ -24,9 +27,9 @@ var app = (function(){
 
     let requestDataForCountry = function(country){
         console.log("Selected country: " + country);
-        let urlCountry = url + '?country=' + country;
-        //console.log("url: " + url);
-        fetch(urlCountry)
+        let urlCountry = proxyurl + url + 'cases?country=' + country;
+        console.log("url: " + urlCountry);
+        fetch(urlCountry, { mode: 'no-cors'})
             .then(function(response) {
                 if(response.status !== 200){
                     console.log("Error: " + response.status);
@@ -44,9 +47,31 @@ var app = (function(){
             });
     }
 
+    let requestHistroyDataForCountry = function(country){
+        console.log("Selected History for: " + country);
+        let urlCountryHistory = proxyurl + url + 'history?country=' + country + '&status=Confirmed';
+        console.log("url: " + urlCountryHistory);
+        fetch(urlCountryHistory, { mode: 'no-cors', headers: {'Access-Control-Allow-Origin': 'https://covid-api.mmediagroup.fr/v1/'}})
+            .then(function(response) {
+                if(response.status !== 200){
+                    console.log("Error: " + response.status);
+                    return;
+                }
+                return response.json();//  Get the text in the response
+            })
+            .then(function(responseText) {
+                console.log('Country Histroy Request successful');
+                renderRequestedHistoryData(country, responseText);
+            })
+            .catch(function(error) {
+                console.log('Country History Request failed', error)
+                // do something with error message
+            });
+    }
+
     let requestDataForCountryList = function(){
-        //console.log("url: " + url);
-        fetch(url)
+        console.log("url: " + proxyurl + url + 'cases');
+        fetch(proxyurl + url + 'cases', { mode: 'cors'})
             .then(function(response) {
                 if(response.status !== 200){
                     console.log("Error: " + response.status);
@@ -59,7 +84,7 @@ var app = (function(){
                 //console.log(responseText);
                 var path = window.location.pathname;
                 var page = path.split("/").pop();
-                console.log( page );
+                //console.log( page );
                 if (page == "index.html") {
                     renderRequestedDataCasesList(responseText);
                 } else if (page == "selectCountry.html") {
@@ -89,6 +114,41 @@ var app = (function(){
         active.innerHTML = data.All.confirmed - data.All.recovered - data.All.deaths;
     }
 
+    let renderRequestedHistoryData = function(country,dataset){
+
+        //console.log('Country-History', dataset.All.dates)
+        
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let data = {
+            labels: [],
+            datasets: [{
+                label: 'Confirmed Cases',
+                data: []
+            }]
+        };
+        for (var key in dataset.All.dates) {
+            data.labels[key] = key;
+            data.datasets.data[key] = data.All.dates[key];
+        }
+        //console.log('Country-History', data)
+        let options = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        };
+
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
+    }
+
     let renderRequestedDataCasesList = function(data) {
         let countryList = document.getElementById("country-list");
         for(let key in data){
@@ -106,6 +166,7 @@ var app = (function(){
             countryList.append(tableItem);
         }
     }
+    
 
     /**
      * Creates a list element with specific text content and btn text
@@ -188,6 +249,7 @@ var app = (function(){
     //public functions and variables
     return {
         requestDataForCountry: requestDataForCountry,
+        requestHistroyDataForCountry: requestHistroyDataForCountry,
         addCountryToWatchlist: addCountryToWatchlist,
         searchCountryList: searchCountryList,
         initDashboard: initDashboard,

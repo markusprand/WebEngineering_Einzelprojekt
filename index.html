@@ -28,26 +28,29 @@
         </nav>
 
         <main>
-            <h1 class="grid-row center" id="selected-country"></h1>
-            <div class="grid-col-3 center dashboard-result">
-                <h2>Confirmed Cases</h2>
-                <h3 id="confirmed-cases"></h3>
+            <div class="grid-row">
+                <h1 class="center" id="selected-country"></h1>
             </div>
-            <div class="grid-col-3 center dashboard-result">
-                <h2>Active Cases</h2>
-                <h3 id="active-cases"></h3>
+            <div class="grid-col-3 dashboard-result">
+                <h2 class="center">Confirmed Cases</h2>
+                <h3 class="center" id="confirmed-cases"></h3>
             </div>
-            <div class="grid-col-3 center dashboard-result">
-                <h2>Recovered</h2>
-                <h3 id="recovered-cases"></h3>
+            <div class="grid-col-3 dashboard-result">
+                <h2 class="center">Active Cases</h2>
+                <h3 class="center" id="active-cases"></h3>
             </div>
-            <div class="grid-col-3 center dashboard-result">
-                <h2>Deaths</h2>
-                <h3 id="deaths"></h3>
+            <div class="grid-col-3 dashboard-result">
+                <h2 class="center">Recovered</h2>
+                <h3 class="center" id="recovered-cases"></h3>
+            </div>
+            <div class="grid-col-3 dashboard-result">
+                <h2 class="center">Deaths</h2>
+                <h3 class="center" id="deaths"></h3>
             </div>
             
             <div class="grid-col-6">
                 <p>Linear Graph</p>
+                <canvas id="myChart" width="400" height="400"></canvas>
             </div>
             <div class="grid-col-6">
                 <p>Logarithmic Graph</p>
@@ -70,5 +73,6 @@
             </div>
         </main>
         <script src="assets/javascript/main.js"></script>
+        <script type="module" src="node_modules/chart.js/dist/Chart.js"></script>
     </body>
 </html>

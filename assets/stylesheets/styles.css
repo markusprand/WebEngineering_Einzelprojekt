@@ -1,5 +1,3 @@
-
-
 *{
     font-family: Arial, sans-serif;
 }
@@ -267,7 +265,7 @@ input:valid {
   .myBody {
     background-color: #faebd7;
     
-    line-height: 1.5;
+    line-height: 1;
 }
 
 .dashboard-result {

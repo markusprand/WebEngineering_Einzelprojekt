@@ -1,18 +1,24 @@
 var app = (function(){
     'use strict'; // execute javascript in strict mode. Eg: usage of undeclared variables is not allowed.
 
-    const proxyurl ='' /*= "https://cors-anywhere.herokuapp.com/"*/;
+    const proxyurl ='' ;
+    //const proxyurl = "https://cors-anywhere.herokuapp.com/";
     var url = 'https://covid-api.mmediagroup.fr/v1/';
 
     let initDashboard = function() {
         let country = 'Global';
         requestDataForCountry(country);
-        //requestHistroyDataForCountry(country)
-        //requestDataForCountryList();
+        requestHistroyDataForCountry(country)
+        requestDataForCountryList();
     }
 
     let initSelectCountry = function() {
         requestDataForCountryList();
+    }
+
+    let initDashboardForCountry = function(country) {
+        requestDataForCountry(country);
+        requestHistroyDataForCountry(country)
     }
 
     let initAbout = function() {
@@ -29,7 +35,7 @@ var app = (function(){
         console.log("Selected country: " + country);
         let urlCountry = proxyurl + url + 'cases?country=' + country;
         console.log("url: " + urlCountry);
-        fetch(urlCountry, { mode: 'no-cors'})
+        fetch(urlCountry, { mode: 'cors'})
             .then(function(response) {
                 if(response.status !== 200){
                     console.log("Error: " + response.status);
@@ -39,6 +45,7 @@ var app = (function(){
             })
             .then(function(responseText) {
                 console.log('Country Request successful');
+                //console.log(responseText);
                 renderRequestedDataCases(country, responseText);
             })
             .catch(function(error) {
@@ -51,7 +58,7 @@ var app = (function(){
         console.log("Selected History for: " + country);
         let urlCountryHistory = proxyurl + url + 'history?country=' + country + '&status=Confirmed';
         console.log("url: " + urlCountryHistory);
-        fetch(urlCountryHistory, { mode: 'no-cors', headers: {'Access-Control-Allow-Origin': 'https://covid-api.mmediagroup.fr/v1/'}})
+        fetch(urlCountryHistory, { mode: 'cors'})
             .then(function(response) {
                 if(response.status !== 200){
                     console.log("Error: " + response.status);
@@ -61,6 +68,7 @@ var app = (function(){
             })
             .then(function(responseText) {
                 console.log('Country Histroy Request successful');
+                //console.log(responseText);
                 renderRequestedHistoryData(country, responseText);
             })
             .catch(function(error) {
@@ -90,8 +98,6 @@ var app = (function(){
                 } else if (page == "selectCountry.html") {
                     renderRequestedDataCountryList(responseText);
                 }
-
-                
             })
             .catch(function(error) {
                 console.log('Country-List Request failed', error)
@@ -126,11 +132,17 @@ var app = (function(){
                 data: []
             }]
         };
+        const xLength = Object.keys(dataset.All.dates).length;
+        var x = xLength;
+        var store = 0;
         for (var key in dataset.All.dates) {
-            data.labels[key] = key;
-            data.datasets.data[key] = data.All.dates[key];
+            if (x < xLength){
+                data.labels[x] = key;
+                data.datasets[0].data[x] = store - dataset.All.dates[key];
+            }
+            store = dataset.All.dates[key];
+            x--;
         }
-        //console.log('Country-History', data)
         let options = {
             scales: {
                 yAxes: [{
@@ -140,7 +152,6 @@ var app = (function(){
                 }]
             }
         };
-
 
         var myChart = new Chart(ctx, {
             type: 'line',
@@ -186,7 +197,7 @@ var app = (function(){
         tdRecovered.textContent = data[country].All.recovered;
         tdDeaths.textContent = data[country].All.deaths;
         tdActive.textContent = data[country].All.confirmed - data[country].All.recovered - data[country].All.deaths;
-        tr.addEventListener("click", function(){app.requestDataForCountry(country);});
+        tr.addEventListener("click", function(){app.initDashboardForCountry(country);});
 
         tr.append(tdCountry, tdConfirmed, tdActive, tdRecovered, tdDeaths); 
         return tr;
@@ -253,6 +264,7 @@ var app = (function(){
         addCountryToWatchlist: addCountryToWatchlist,
         searchCountryList: searchCountryList,
         initDashboard: initDashboard,
+        initDashboardForCountry: initDashboardForCountry,
         initSelectCountry: initSelectCountry,
         initAbout: initAbout
     }

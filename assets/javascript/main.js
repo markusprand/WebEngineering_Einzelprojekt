@@ -3,22 +3,22 @@ var app = (function(){
 
     const proxyurl ='' ;
     //const proxyurl = "https://cors-anywhere.herokuapp.com/";
-    var url = 'https://covid-api.mmediagroup.fr/v1/';
+    const url = 'https://corona-api.com/';
+    const urlGlobalTimeline = proxyurl + url + 'timeline';
+    const urlCounties = proxyurl + url + 'countries';
+    const urlCountry = urlCounties + '/';
 
     let initDashboard = function() {
-        let country = 'Global';
-        requestDataForCountry(country);
-        requestHistroyDataForCountry(country)
+        requestDataforGlobal();
         requestDataForCountryList();
+    }
+
+    let initDashboardForCountry = function(countryId) {
+        requestDataForCountry(countryId);
     }
 
     let initSelectCountry = function() {
-        requestDataForCountryList();
-    }
-
-    let initDashboardForCountry = function(country) {
-        requestDataForCountry(country);
-        requestHistroyDataForCountry(country)
+        requestDataForCountryWatchList();
     }
 
     let initAbout = function() {
@@ -31,11 +31,33 @@ var app = (function(){
         
     }
 
-    let requestDataForCountry = function(country){
-        console.log("Selected country: " + country);
-        let urlCountry = proxyurl + url + 'cases?country=' + country;
-        console.log("url: " + urlCountry);
-        fetch(urlCountry, { mode: 'cors'})
+    let requestDataforGlobal = function(){
+        console.log('Get Global Data');
+        fetch(urlGlobalTimeline, { mode: 'cors'})
+            .then(function(response) {
+                if(response.status !== 200){
+                    console.log("Error: " + response.status);
+                    return;
+                }
+                return response.json();//  Get the text in the response
+            })
+            .then(function(responseText) {
+                console.log('Global Data Request successful');
+                //console.log(responseText);
+                let country = 'Global';
+                renderRequestedDataForDashboard(country, responseText.data);
+            })
+            .catch(function(error) {
+                console.log('Global Data Request failed', error)
+            });
+    }
+
+
+    let requestDataForCountry = function(countryId){
+        console.log("Selected countryId: " + countryId);
+        let urlSelectedCountry = urlCountry + countryId;
+        console.log("url: " + urlSelectedCountry);
+        fetch(urlSelectedCountry, { mode: 'cors'})
             .then(function(response) {
                 if(response.status !== 200){
                     console.log("Error: " + response.status);
@@ -46,40 +68,17 @@ var app = (function(){
             .then(function(responseText) {
                 console.log('Country Request successful');
                 //console.log(responseText);
-                renderRequestedDataCases(country, responseText);
+                let country = responseText.data.name;
+                renderRequestedDataForDashboard(country, responseText.data.timeline);
             })
             .catch(function(error) {
                 console.log('Country Request failed', error)
-                // do something with error message
-            });
-    }
-
-    let requestHistroyDataForCountry = function(country){
-        console.log("Selected History for: " + country);
-        let urlCountryHistory = proxyurl + url + 'history?country=' + country + '&status=Confirmed';
-        console.log("url: " + urlCountryHistory);
-        fetch(urlCountryHistory, { mode: 'cors'})
-            .then(function(response) {
-                if(response.status !== 200){
-                    console.log("Error: " + response.status);
-                    return;
-                }
-                return response.json();//  Get the text in the response
-            })
-            .then(function(responseText) {
-                console.log('Country Histroy Request successful');
-                //console.log(responseText);
-                renderRequestedHistoryData(country, responseText);
-            })
-            .catch(function(error) {
-                console.log('Country History Request failed', error)
-                // do something with error message
             });
     }
 
     let requestDataForCountryList = function(){
-        console.log("url: " + proxyurl + url + 'cases');
-        fetch(proxyurl + url + 'cases', { mode: 'cors'})
+        console.log('Get all countries for list');
+        fetch(urlCounties, { mode: 'cors'})
             .then(function(response) {
                 if(response.status !== 200){
                     console.log("Error: " + response.status);
@@ -89,24 +88,34 @@ var app = (function(){
             })
             .then(function(responseText) {
                 console.log('Country-List Request successful');
-                //console.log(responseText);
-                var path = window.location.pathname;
-                var page = path.split("/").pop();
-                //console.log( page );
-                if (page == "index.html") {
-                    renderRequestedDataCasesList(responseText);
-                } else if (page == "selectCountry.html") {
-                    renderRequestedDataCountryList(responseText);
-                }
+                renderRequestedDataCasesList(responseText);
             })
             .catch(function(error) {
                 console.log('Country-List Request failed', error)
-                // do something with error message
             });
     }
 
+    let requestDataForCountryWatchList = function(){
+        console.log('Get all countries for Watchlist');
+        fetch(urlCounties, { mode: 'cors'})
+            .then(function(response) {
+                if(response.status !== 200){
+                    console.log("Error: " + response.status);
+                    return;
+                }
+                return response.json();//  Get the text in the response
+            })
+            .then(function(responseText) {
+                console.log('Country-Watchlist Request successful');
+                renderRequestedDataCountryList(responseText);
+            })
+            .catch(function(error) {
+                console.log('Country-Watchlist Request failed', error)
+            });
+    }
 
-    let renderRequestedDataCases = function(country,data){
+    let renderRequestedDataForDashboard = function(country, dataset){
+        //render Cases Info
         let selectedCountry = document.getElementById("selected-country");
         let confirmed = document.getElementById("confirmed-cases");
         let active = document.getElementById("active-cases");
@@ -114,16 +123,12 @@ var app = (function(){
         let deaths = document.getElementById("deaths");
 
         selectedCountry.innerHTML = country;
-        confirmed.innerHTML = data.All.confirmed;
-        recovered.innerHTML = data.All.recovered;
-        deaths.innerHTML = data.All.deaths;
-        active.innerHTML = data.All.confirmed - data.All.recovered - data.All.deaths;
-    }
+        confirmed.innerHTML = dataset[0].confirmed;
+        active.innerHTML = dataset[0].active;
+        recovered.innerHTML = dataset[0].recovered;
+        deaths.innerHTML = dataset[0].deaths;
 
-    let renderRequestedHistoryData = function(country,dataset){
-
-        //console.log('Country-History', dataset.All.dates)
-        
+        //render Histroy-Data
         let ctx = document.getElementById('myChart').getContext('2d');
         let data = {
             labels: [],
@@ -132,17 +137,6 @@ var app = (function(){
                 data: []
             }]
         };
-        const xLength = Object.keys(dataset.All.dates).length;
-        var x = xLength;
-        var store = 0;
-        for (var key in dataset.All.dates) {
-            if (x < xLength){
-                data.labels[x] = key;
-                data.datasets[0].data[x] = store - dataset.All.dates[key];
-            }
-            store = dataset.All.dates[key];
-            x--;
-        }
         let options = {
             scales: {
                 yAxes: [{
@@ -152,7 +146,13 @@ var app = (function(){
                 }]
             }
         };
-
+        const xLength = Object.keys(dataset).length;
+        var x = xLength;
+        for (var key in dataset) {
+            data.labels[x] = dataset[key].date;
+            data.datasets[0].data[x] = dataset[key].new_confirmed;
+            x--;
+        }
         var myChart = new Chart(ctx, {
             type: 'line',
             data: data,
@@ -162,60 +162,63 @@ var app = (function(){
 
     let renderRequestedDataCasesList = function(data) {
         let countryList = document.getElementById("country-list");
-        for(let key in data){
+        for(let key in data.data){
             let tableItem = _createCasesTableItem(key, data);
-            //console.log(key);
             countryList.append(tableItem);
         }
     }
 
     let renderRequestedDataCountryList = function(data) {
         let countryList = document.getElementById("country-list-all");
-        for(let key in data){
-            let tableItem = _createAllCountryTableItem(key, "+");
-            //console.log(key);
+        for(let key in data.data){
+            let tableItem = _createAllCountryTableItem(key, data, "+");
             countryList.append(tableItem);
         }
     }
+
     
 
     /**
      * Creates a list element with specific text content and btn text
      * Returns the created element
      */
-    let _createCasesTableItem = function(country, data){
+    let _createCasesTableItem = function(key, data){
 
         let tr = document.createElement("tr");
         let tdCountry = document.createElement("td");
+        let tdCountryId = document.createElement("td");
         let tdConfirmed = document.createElement("td");
         let tdActive = document.createElement("td");
         let tdRecovered = document.createElement("td");
         let tdDeaths = document.createElement("td");
 
-        tdCountry.textContent = country;
-        tdConfirmed.textContent = data[country].All.confirmed;
-        tdRecovered.textContent = data[country].All.recovered;
-        tdDeaths.textContent = data[country].All.deaths;
-        tdActive.textContent = data[country].All.confirmed - data[country].All.recovered - data[country].All.deaths;
-        tr.addEventListener("click", function(){app.initDashboardForCountry(country);});
+        tdCountry.textContent = data.data[key].name;
+        tdCountryId.textContent = data.data[key].code;
+        tdConfirmed.textContent = data.data[key].latest_data.confirmed;
+        tdRecovered.textContent = data.data[key].latest_data.recovered;
+        tdDeaths.textContent = data.data[key].latest_data.deaths;
+        tdActive.textContent = data.data[key].latest_data.confirmed - data.data[key].latest_data.recovered - data.data[key].latest_data.deaths;
+        tr.addEventListener("click", function(){app.initDashboardForCountry(data.data[key].code);});
 
-        tr.append(tdCountry, tdConfirmed, tdActive, tdRecovered, tdDeaths); 
+        tr.append(tdCountry, tdCountryId, tdConfirmed, tdActive, tdRecovered, tdDeaths); 
         return tr;
     }
 
-    let _createAllCountryTableItem = function(country, btnText){
+    let _createAllCountryTableItem = function(key, data, btnText){
 
         let tr = document.createElement("tr");
         let tdCountry = document.createElement("td");
+        let tdCountryId = document.createElement("td");
         let tdBtn = document.createElement("td");
         let btn = document.createElement("btn");
         
-        tdCountry.textContent = country;
+        tdCountry.textContent = data.data[key].name;
+        tdCountryId.textContent = data.data[key].code;
         btn.textContent = btnText;
         btn.addEventListener("click", function(){app.addCountryToWatchlist(this);});
 
         tdBtn.append(btn);
-        tr.append(tdCountry, tdBtn); 
+        tr.append(tdCountry, tdCountryId, tdBtn); 
         return tr;
     }
 
@@ -242,6 +245,7 @@ var app = (function(){
         table = document.getElementById("country-list");
         tr = table.getElementsByTagName("tr");
       
+        console.log(tr);
         // Loop through all table rows, and hide those who don't match the search query
         for (i = 0; i < tr.length; i++) {
           td = tr[i].getElementsByTagName("td")[0];
@@ -260,7 +264,7 @@ var app = (function(){
     //public functions and variables
     return {
         requestDataForCountry: requestDataForCountry,
-        requestHistroyDataForCountry: requestHistroyDataForCountry,
+        requestDataforGlobal: requestDataforGlobal,
         addCountryToWatchlist: addCountryToWatchlist,
         searchCountryList: searchCountryList,
         initDashboard: initDashboard,

@@ -1,0 +1,27 @@
+{
+  "name": "WebEngineering_Einzelprojekt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "chart.js": "^2.9.4"
+  },
+  "devDependencies": {
+    "webpack": "^5.10.1",
+    "webpack-cli": "^4.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markusprand/WebEngineering_Einzelprojekt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markusprand/WebEngineering_Einzelprojekt/issues"
+  },
+  "homepage": "https://github.com/markusprand/WebEngineering_Einzelprojekt#readme"
+}

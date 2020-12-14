@@ -1,5 +1,3 @@
-import Chart from 'chart.js';
-
 var app = (function(){
     'use strict'; // execute javascript in strict mode. Eg: usage of undeclared variables is not allowed.
 

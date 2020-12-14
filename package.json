@@ -1,8 +1,8 @@
 {
   "name": "WebEngineering_Einzelprojekt",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Noch ein Covid-Dashboard...",
+  "private": true,
   "dependencies": {
     "chart.js": "^2.9.4"
   },

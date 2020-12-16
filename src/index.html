@@ -9,8 +9,7 @@
         <link rel="stylesheet" type="text/css" href="stylesheets/styles.css">
         <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-    </head>
-    <body class="myBody" id="dashboard">
+    <body class="myBody" onload="app.initDashboard();">
         <nav class="top-nav fixed">
             <ul>
                 <li>
@@ -27,7 +26,8 @@
                 </li>
             </ul>
         </nav>
-        <main id="app">
+
+        <main>
             <div class="grid-row">
                 <h1 class="center" id="selected-country"></h1>
             </div>
@@ -46,10 +46,12 @@
             <div class="grid-col-3 dashboard-result">
                 <h2 class="center">Deaths</h2>
                 <h3 class="center" id="deaths"></h3>
-            </div>                
+            </div>
+            
             <div class="grid-row">
-                <canvas id="myChart" width="200" height="100"></canvas>
-            </div>   
+                <canvas id="myChart" width="400" height="200"></canvas>
+            </div>
+
             <div class="grid-row">
                 <i class="fas fa-search"></i>
                 <input type="text" id="country-search" onkeyup="app.searchCountryList()" placeholder="Search for country...">
@@ -68,7 +70,7 @@
                 </table>
             </div>
         </main>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js" integrity="sha512-hZf9Qhp3rlDJBvAKvmiG+goaaKRZA6LKUO35oK6EsM0/kjPK32Yw7URqrq3Q+Nvbbt8Usss+IekL7CRn83dYmw==" crossorigin="anonymous"></script>
-        <script type="module" src="javascript/index.js"></script>
+        <script src="javascript/main.js"></script>
+        <script type="module" src="../node_modules/chart.js/dist/Chart.js"></script>
     </body>
 </html>

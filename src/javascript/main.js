@@ -1,3 +1,5 @@
+//import {testLog} from './modulTest.js';
+
 var app = (function(){
     'use strict'; // execute javascript in strict mode. Eg: usage of undeclared variables is not allowed.
 
@@ -11,6 +13,7 @@ var app = (function(){
     let initDashboard = function() {
         requestDataforGlobal();
         requestDataForCountryList();
+        //testLog();
     }
 
     let initDashboardForCountry = function(countryId) {
@@ -56,7 +59,7 @@ var app = (function(){
     let requestDataForCountry = function(countryId){
         console.log("Selected countryId: " + countryId);
         let urlSelectedCountry = urlCountry + countryId;
-        console.log("url: " + urlSelectedCountry);
+        //console.log("url: " + urlSelectedCountry);
         fetch(urlSelectedCountry, { mode: 'cors'})
             .then(function(response) {
                 if(response.status !== 200){
@@ -245,7 +248,7 @@ var app = (function(){
         table = document.getElementById("country-list");
         tr = table.getElementsByTagName("tr");
       
-        console.log(tr);
+        
         // Loop through all table rows, and hide those who don't match the search query
         for (i = 0; i < tr.length; i++) {
           td = tr[i].getElementsByTagName("td")[0];
